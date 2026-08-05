@@ -51,7 +51,10 @@ function renderProducts(products) {
   filtered.forEach(p => {
     const isAvailable = p.status === 'Disponível';
     const safeName = sanitizeHTML(p.nome);
-    const safePrice = sanitizeHTML(p.preco);
+    // Como deve ficar:
+let precoNumerico = parseFloat(String(p.preco).replace(',', '.')) || 0;
+let precoFormatado = precoNumerico.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const safePrice = sanitizeHTML(precoFormatado);
     
     const message = encodeURIComponent(`Olá! Vi o produto *${p.nome}* no catálogo e gostaria de confirmar a compra!`);
     const waUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${message}`;
