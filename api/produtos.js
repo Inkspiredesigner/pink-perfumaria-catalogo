@@ -1,49 +1,50 @@
 export default async function handler(req, res) {
-  // Permite apenas requisições GET (Leitura)
-  if (req.method !== 'GET') {
-    return res.status(405).json({ message: 'Método não permitido' });
-  }
+  const { AIRTABLE_PAT, AIRTABLE_BASE_ID, AIRTABLE_TABLE_NAME } = process.env;
 
-  const AIRTABLE_PAT = process.env.AIRTABLE_PAT;
-  const AIRTABLE_BASE_ID = process.env.AIRTABLE_BASE_ID;
-  const AIRTABLE_TABLE_NAME = process.env.AIRTABLE_TABLE_NAME || 'Produtos';
-
-  if (!AIRTABLE_PAT || !AIRTABLE_BASE_ID) {
-    return res.status(500).json({ error: 'Configuração de servidor incompleta.' });
+  // Verifica se as variáveis existem na Vercel
+  if (!AIRTABLE_PAT || !AIRTABLE_BASE_ID || !AIRTABLE_TABLE_NAME) {
+    return res.status(500).json({ 
+      error: "Variáveis de ambiente ausentes no servidor da Vercel.",
+      missing: {
+        pat: !AIRTABLE_PAT,
+        baseId: !AIRTABLE_BASE_ID,
+        tableName: !AIRTABLE_TABLE_NAME
+      }
+    });
   }
 
   try {
-    const response = await fetch(
-      `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${encodeURIComponent(AIRTABLE_TABLE_NAME)}`,
-      {
-        headers: {
-          Authorization: `Bearer ${AIRTABLE_PAT}`,
-          'Content-Type': 'application/json'
-        }
-      }
-    );
-
-    if (!response.ok) {
-      throw new Error(`Erro Airtable: ${response.status}`);
-    }
+    const url = `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${encodeURIComponent(AIRTABLE_TABLE_NAME)}`;
+    
+    const response = await fetch(url, {
+      headers: {
+        Authorization: `Bearer ${AIRTABLE_PAT.trim()}`,
+      },
+    });
 
     const data = await response.json();
-    
-    // Retorna apenas os campos estritamente necessários para a tela
-    const cleanRecords = data.records.map(record => ({
+
+    // Se o Airtable recusar (ex: erro 401, 404, etc), mostra a resposta real do Airtable
+    if (!response.ok) {
+      return res.status(response.status).json({
+        error: "Airtable recusou a requisição",
+        status: response.status,
+        airtableMessage: data
+      });
+    }
+
+    // Trata e formata os produtos
+    const produtos = data.records.map(record => ({
       id: record.id,
-      nome: record.fields.Nome || '',
-      categoria: record.fields.Categoria || 'Outros',
-      preco: record.fields.Preco ? `R$ ${record.fields.Preco}` : '',
+      nome: record.fields.Nome || 'Produto sem nome',
+      categoria: record.fields.Categoria || 'Geral',
+      preco: record.fields.Preco || 'Sob consulta',
       status: record.fields.Status || 'Disponível',
-      foto: record.fields.Foto && record.fields.Foto[0] ? record.fields.Foto[0].url : ''
+      foto: record.fields.Foto?.[0]?.url || ''
     }));
 
-    // Cache de 60 segundos para evitar estouro de requisições
-    res.setHeader('Cache-Control', 's-maxage=60, stale-while-revalidate');
-    return res.status(200).json(cleanRecords);
-
+    return res.status(200).json(produtos);
   } catch (error) {
-    return res.status(500).json({ error: 'Erro ao buscar dados com segurança.' });
+    return res.status(500).json({ error: "Erro interno", details: error.message });
   }
 }
