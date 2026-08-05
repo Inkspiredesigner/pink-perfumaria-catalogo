@@ -14,33 +14,49 @@ export default async function handler(req, res) {
   }
 
   try {
-    const url = `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${encodeURIComponent(AIRTABLE_TABLE_NAME)}`;
-    
-    const response = await fetch(url, {
-      headers: {
-        Authorization: `Bearer ${AIRTABLE_PAT.trim()}`,
-      },
-    });
+    let allRecords = [];
+    let offset = null;
 
-    const data = await response.json();
+    // Loop para buscar TODAS as páginas do Airtable (sem limite de 100 itens)
+    do {
+      let url = `https://api.airtable.com/v0/${AIRTABLE_BASE_ID}/${encodeURIComponent(AIRTABLE_TABLE_NAME)}`;
+      if (offset) {
+        url += `?offset=${offset}`;
+      }
 
-    // Se o Airtable recusar (ex: erro 401, 404, etc), mostra a resposta real do Airtable
-    if (!response.ok) {
-      return res.status(response.status).json({
-        error: "Airtable recusou a requisição",
-        status: response.status,
-        airtableMessage: data
+      const response = await fetch(url, {
+        headers: {
+          Authorization: `Bearer ${AIRTABLE_PAT.trim()}`,
+        },
       });
-    }
 
-    // Trata e formata os produtos
-    const produtos = data.records.map(record => ({
+      const data = await response.json();
+
+      // Se o Airtable recusar (ex: erro 401, 404, etc), mostra a resposta real
+      if (!response.ok) {
+        return res.status(response.status).json({
+          error: "Airtable recusou a requisição",
+          status: response.status,
+          airtableMessage: data
+        });
+      }
+
+      if (data.records) {
+        allRecords = allRecords.concat(data.records);
+      }
+
+      offset = data.offset; // Se houver mais de 100 registros, o Airtable devolve o 'offset'
+    } while (offset);
+
+    // Trata e formata todos os produtos
+    const produtos = allRecords.map(record => ({
       id: record.id,
       nome: record.fields.Nome || 'Produto sem nome',
       categoria: record.fields.Categoria || 'Geral',
       preco: record.fields.Preco || 'Sob consulta',
       status: record.fields.Status || 'Disponível',
-      foto: record.fields.Foto?.[0]?.url || ''
+      foto: record.fields.Foto?.[0]?.url || '',
+      descricao: record.fields.Descrição || record.fields.Descricao || ''
     }));
 
     return res.status(200).json(produtos);
