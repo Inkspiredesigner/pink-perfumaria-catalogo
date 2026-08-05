@@ -87,38 +87,3 @@ function setupEvents() {
     });
   });
 }
-// Dados temporários só para você ver o layout no Live Server
-const mockProducts = [
-  {
-    nome: "Body Splash Virgínia",
-    categoria: "Corporal",
-    preco: "R$ 89,90",
-    status: "Disponível",
-    foto: "https://via.placeholder.com/300x300/FFD6E7/E6007E?text=Body+Splash"
-  },
-  {
-    nome: "Perfume VF Gold",
-    categoria: "Perfumaria",
-    preco: "R$ 199,00",
-    status: "Esgotado",
-    foto: "https://via.placeholder.com/300x300/FFD6E7/E6007E?text=Perfume+VF"
-  }
-];
-
-async function fetchProductsSecurely() {
-  const grid = document.getElementById('productGrid');
-  grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; padding: 40px;">Carregando produtos...</p>';
-
-  try {
-    const response = await fetch('/api/produtos');
-    if (!response.ok) throw new Error('Falha na resposta da API');
-    
-    allProducts = await response.json();
-    renderProducts(allProducts);
-  } catch (error) {
-    // Se estiver no Live Server (sem rota /api), usa os produtos de teste para você ver o visual!
-    console.warn('Modo local sem servidor: usando dados de teste.');
-    allProducts = mockProducts;
-    renderProducts(allProducts);
-  }
-}
