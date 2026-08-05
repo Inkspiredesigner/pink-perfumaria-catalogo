@@ -134,6 +134,7 @@ body {
   justify-content: space-between;
   position: relative;
   transition: transform 0.2s ease;
+  height: 100%; /* Garante altura total do grid */
 }
 
 .product-card:hover {
@@ -178,14 +179,26 @@ body {
 .product-title {
   font-size: 0.9rem;
   font-weight: 600;
-  margin-bottom: 4px;
+  margin-bottom: 6px;
+  line-height: 1.3;
 }
 
 .product-price {
   font-size: 1rem;
   font-weight: 700;
   color: var(--pink-primary);
+  margin-bottom: 2px; /* Reduzido para aproximar da descrição */
+}
+
+/* Descrição e Parcelamento (Ajustado) */
+.product-installment {
+  font-size: 0.8rem;
+  color: #555555;
+  line-height: 1.35;
+  margin-top: 2px;
   margin-bottom: 12px;
+  white-space: normal;     /* Força quebra de linha */
+  word-break: break-word;  /* Impede palavras longas de estourar a caixa */
 }
 
 .btn-whatsapp {
@@ -199,42 +212,10 @@ body {
   border-radius: 8px;
   font-size: 0.8rem;
   font-weight: 600;
-  margin-top: auto;
+  margin-top: auto; /* Empurra o botão sempre para o rodapé do card */
 }
 
 .btn-whatsapp.disabled {
   background-color: #CCCCCC;
   pointer-events: none;
-}
-.product-installment {
-  font-size: 0.85rem;
-  color: #666;
-  margin-top: -6px;
-  margin-bottom: 12px;
-}
-/* 1. Garante que o card adapte a altura ao conteúdo */
-.product-card {
-  height: auto;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-/* 2. Permite que a área de informações ocupe o espaço necessário */
-.product-info {
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-  padding: 15px;
-}
-
-/* 3. Ajusta a descrição para quebrar linhas e não cortar texto */
-.product-installment {
-  font-size: 0.82rem;
-  color: #666;
-  line-height: 1.3;
-  margin-top: 4px;
-  margin-bottom: 12px;
-  white-space: normal;    /* Força o texto a dobrar de linha */
-  word-break: break-word; /* Evita que palavras grandes saiam da tela */
 }
