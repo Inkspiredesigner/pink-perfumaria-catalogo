@@ -65,7 +65,7 @@ function renderProducts(products) {
       <img src="${p.foto || 'https://via.placeholder.com/300'}" alt="${safeName}" class="product-img" loading="lazy">
       <div class="product-info">
         <h3 class="product-title">${safeName}</h3>
-        <p class="product-price">${safePrice}</p>
+        <p class="product-price">R$ ${safePrice}</p>
         <a href="${waUrl}" target="_blank" rel="noopener noreferrer" class="btn-whatsapp ${!isAvailable ? 'disabled' : ''}">
           ${isAvailable ? 'Pedir no WhatsApp' : 'Indisponível'}
         </a>
