@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Função para prevenir Injeção de Código (XSS)
 function sanitizeHTML(str) {
+  if (!str) return '';
   const temp = document.createElement('div');
   temp.textContent = str;
   return temp.innerHTML;
@@ -51,10 +52,14 @@ function renderProducts(products) {
   filtered.forEach(p => {
     const isAvailable = p.status === 'Disponível';
     const safeName = sanitizeHTML(p.nome);
-    // Como deve ficar:
-let precoNumerico = parseFloat(String(p.preco).replace(',', '.')) || 0;
-let precoFormatado = precoNumerico.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-const safePrice = sanitizeHTML(precoFormatado);
+    
+    // Formata o preço para R$ 00,00
+    let precoNumerico = parseFloat(String(p.preco).replace(',', '.')) || 0;
+    let precoFormatado = precoNumerico.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    const safePrice = sanitizeHTML(precoFormatado);
+    
+    // Captura a descrição/parcelamento do Airtable (caso exista)
+    const safeDescription = sanitizeHTML(p.descricao || p.Descrição || '');
     
     const message = encodeURIComponent(`Olá! Vi o produto *${p.nome}* no catálogo e gostaria de confirmar a compra!`);
     const waUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${message}`;
@@ -69,6 +74,7 @@ const safePrice = sanitizeHTML(precoFormatado);
       <div class="product-info">
         <h3 class="product-title">${safeName}</h3>
         <p class="product-price">R$ ${safePrice}</p>
+        ${safeDescription ? `<p class="product-installment">${safeDescription}</p>` : ''}
         <a href="${waUrl}" target="_blank" rel="noopener noreferrer" class="btn-whatsapp ${!isAvailable ? 'disabled' : ''}">
           ${isAvailable ? 'Pedir no WhatsApp' : 'Indisponível'}
         </a>
