@@ -434,17 +434,25 @@ body {
 .btn-add-cart.added {
   background-color: #25d366 !important;
 }
-/* Tamanho e estilo da logo (Aumentado) */
+/* Container para alinhar logo e texto lado a lado */
+.brand-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px; /* Espaço entre a logo e o nome */
+}
+
+/* Tamanho e estilo da logo */
 .brand-logo {
-  width: 70px;            /* Aumentado de 45px para 70px */
-  height: 70px;           /* Aumentado de 45px para 70px */
+  width: 45px;           /* Altura/Largura da logo */
+  height: 45px;
   object-fit: contain;    /* Mantém a proporção sem distorcer */
 }
 
-/* Ajuste responsivo para celular */
+/* Em telas pequenas de celular, ajusta levemente se necessário */
 @media (max-width: 480px) {
   .brand-logo {
-    width: 55px;          /* Ajustado para celular */
-    height: 55px;
+    width: 38px;
+    height: 38px;
   }
 }
