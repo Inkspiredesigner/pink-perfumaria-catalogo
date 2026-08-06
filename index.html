@@ -31,7 +31,7 @@
   <button class="cat-btn" data-category="Óleos">✨ Óleos Corporais</button>
   <button class="cat-btn" data-category="Desodorantes">🛡️ Desodorantes</button>
   <button class="cat-btn" data-category="Capilar">💇‍♀️ Capilar</button>
-  <button class="cat-btn" data-category="Skincare">💆‍♀️ Facial</button>
+  <button class="cat-btn" data-category="Facial">💆‍♀️ Facial</button>
   <button class="cat-btn" data-category="Kits">🎁 Kits</button>
 </div>
   <!-- Grid de Produtos -->
@@ -42,5 +42,34 @@
   </main>
 
   <script src="script.js"></script>
+  <!-- Botão Flutuante do Carrinho -->
+<button id="floatingCartBtn" class="floating-cart-btn" onclick="toggleCartModal()">
+  🛒
+  <span id="cartCountBadge" class="cart-badge">0</span>
+</button>
+
+<!-- Modal do Carrinho -->
+<div id="cartModalOverlay" class="cart-modal-overlay" onclick="closeCartOnOverlay(event)">
+  <div class="cart-modal">
+    <div class="cart-header">
+      <h2>Seu Carrinho 🛍️</h2>
+      <button class="cart-close-btn" onclick="toggleCartModal()">&times;</button>
+    </div>
+    
+    <div id="cartItemsContainer" class="cart-items">
+      <!-- Os itens do carrinho serão renderizados aqui via JavaScript -->
+    </div>
+
+    <div class="cart-footer">
+      <div class="cart-total-row">
+        <span>Total:</span>
+        <strong id="cartTotalValue">R$ 0,00</strong>
+      </div>
+      <button class="btn-checkout-wa" onclick="sendCartToWhatsApp()">
+        Concluir Pedido no WhatsApp 💬
+      </button>
+    </div>
+  </div>
+</div>
 </body>
 </html>
