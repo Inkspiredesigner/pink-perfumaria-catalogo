@@ -50,8 +50,9 @@ function renderProducts(products) {
 
   filtered.forEach(p => {
     const isAvailable = p.status === 'Disponível';
-    const safeName = sanitizeHTML(p.nome);
-    
+   const marcaTexto = p.marca ? ` - ${p.marca}` : '';
+const safeName = sanitizeHTML(`${p.nome}${marcaTexto}`);
+
     let precoNumerico = parseFloat(String(p.preco).replace(',', '.')) || 0;
     let precoFormatado = precoNumerico.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     const safePrice = sanitizeHTML(precoFormatado);
