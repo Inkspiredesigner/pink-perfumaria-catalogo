@@ -59,7 +59,7 @@ const safeName = sanitizeHTML(`${p.nome}${marcaTexto}`);
     const safeDescription = sanitizeHTML(p.descricao || p.Descrição || '');
 
     const card = document.createElement('div');
-    card.className = 'product-card';
+card.className = `product-card ${!isAvailable ? 'out-of-stock' : ''}`;
     card.innerHTML = `
       <span class="badge ${isAvailable ? 'disponivel' : 'esgotado'}">
         ${isAvailable ? 'Pronta Entrega' : 'Esgotado'}
