@@ -448,3 +448,23 @@ body {
     height: 55px;
   }
 }
+/* Visual especial para Produtos Indisponíveis */
+.product-card.out-of-stock {
+  opacity: 0.75; /* Apaga um pouco o card inteiro */
+}
+
+.product-card.out-of-stock .product-img {
+  filter: grayscale(80%); /* Deixa a foto do produto em preto e branco/cinza */
+}
+
+.product-card.out-of-stock .product-price {
+  color: #888888 !important; /* Muda o valor do preço de Rosa para Cinza */
+}
+
+.product-card.out-of-stock .btn-add-cart,
+.btn-add-cart.disabled {
+  background-color: #E0E0E0 !important; /* Botão fica cinza bem claro */
+  color: #888888 !important;            /* Texto do botão em cinza */
+  cursor: not-allowed;
+  pointer-events: none;
+}
