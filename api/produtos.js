@@ -48,7 +48,7 @@ export default async function handler(req, res) {
       offset = data.offset; // Se houver mais de 100 registros, o Airtable devolve o 'offset'
     } while (offset);
 
-    // Trata e formata todos os produtos
+  // Trata e formata todos os produtos
     const produtos = allRecords.map(record => ({
       id: record.id,
       nome: record.fields.Nome || 'Produto sem nome',
@@ -56,9 +56,9 @@ export default async function handler(req, res) {
       preco: record.fields.Preco || 'Sob consulta',
       status: record.fields.Status || 'Disponível',
       foto: record.fields.Foto?.[0]?.url || '',
-      descricao: record.fields.Descrição || record.fields.Descricao || ''
+      descricao: record.fields.Descrição || record.fields.Descricao || '',
+      marca: record.fields.Marca || '' // <-- ADICIONE ESTA LINHA
     }));
-
     return res.status(200).json(produtos);
   } catch (error) {
     return res.status(500).json({ error: "Erro interno", details: error.message });
