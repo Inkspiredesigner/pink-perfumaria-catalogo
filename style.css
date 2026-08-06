@@ -436,8 +436,8 @@ body {
 }
 /* Tamanho e estilo da logo (Aumentado) */
 .brand-logo {
-  width: 70px;            /* Aumentado de 45px para 70px */
-  height: 70px;           /* Aumentado de 45px para 70px */
+  width: 80px;            /* Aumentado de 45px para 70px */
+  height: 80px;           /* Aumentado de 45px para 70px */
   object-fit: contain;    /* Mantém a proporção sem distorcer */
 }
 
